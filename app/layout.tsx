@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "@/components/header/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ClientProvider from "@/components/providers/ClientProvider";
+import FirebaseAuthProvider from "@/components/FirebaseAuthProvider";
+import SubscriptionProvider from "@/components/SubscriptionProvider";
 
 export const metadata: Metadata = {
   title: "SaaS-ChatApplication",
@@ -18,15 +20,19 @@ export default function RootLayout({
     <ClientProvider>
       <html lang="en">
         <body className="flex flex-col min-h-screen">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Header />
-            {children}
-          </ThemeProvider>
+          <FirebaseAuthProvider>
+            <SubscriptionProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Header />
+                {children}
+              </ThemeProvider>
+            </SubscriptionProvider>
+          </FirebaseAuthProvider>
         </body>
       </html>
     </ClientProvider>
