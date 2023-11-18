@@ -14,6 +14,7 @@ import LoadingSpinner from "../loaders/LoadingSpinner";
 import { useSubscriptionStore } from "@/store/store";
 import { StarIcon } from "lucide-react";
 import ManageAccountButton from "../account/ManageAccountButton";
+import { IUserSession } from "@/types";
 function UserButton({ session }: IUserSession) {
   const subscription = useSubscriptionStore((state) => state.subscription);
   //Session...

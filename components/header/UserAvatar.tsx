@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { IUserAvatarProps } from "@/types";
 import Image from "next/image";
 export default function UserAvatar({
   name,

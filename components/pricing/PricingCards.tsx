@@ -1,6 +1,7 @@
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
 import CheckoutButton from "./CheckoutButton";
+import { IPricingCardsProps, IPricingCardsTiers } from "@/types";
 
 export default function PricingCards({ redirect }: IPricingCardsProps) {
   const tiers: IPricingCardsTiers[] = [
