@@ -4,12 +4,11 @@ import Header from "@/components/header/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ClientProvider from "@/components/providers/ClientProvider";
 import FirebaseAuthProvider from "@/components/FirebaseAuthProvider";
-import SubscriptionProvider from "@/components/SubscriptionProvider";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "SaaS-ChatApplication",
-  description: "COMPLETE SaaS Platform with Stripe Payments & Next.js 13",
+  description: "COMPLETE SaaS Platform with Shad cn & Next.js 13",
 };
 
 export default function RootLayout({
@@ -22,19 +21,17 @@ export default function RootLayout({
       <html lang="en">
         <body className="flex flex-col min-h-screen">
           <FirebaseAuthProvider>
-            <SubscriptionProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <Header />
-                {children}
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Header />
+              {children}
 
-                <Toaster />
-              </ThemeProvider>
-            </SubscriptionProvider>
+              <Toaster />
+            </ThemeProvider>
           </FirebaseAuthProvider>
         </body>
       </html>

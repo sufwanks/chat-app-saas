@@ -13,21 +13,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { addDoc, getDocs, serverTimestamp } from "firebase/firestore";
-import { limitedMessagesRef, messageRef } from "@/lib/convertors/Message";
-import { useSubscriptionStore } from "@/store/store";
-import { useToast } from "../ui/use-toast";
-import { ToastAction } from "@radix-ui/react-toast";
-import { useRouter } from "next/navigation";
+import { addDoc, serverTimestamp } from "firebase/firestore";
+import { messageRef } from "@/lib/convertors/Message";
+
 const formSchema = z.object({
   input: z.string().max(1000),
 });
 
 function ChatInput({ chatId }: IChatInputProps) {
   const { data: session } = useSession();
-  const { toast } = useToast();
-  const router = useRouter();
-  const subscription = useSubscriptionStore((state) => state.subscription);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { input: "" },
@@ -35,32 +30,6 @@ function ChatInput({ chatId }: IChatInputProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!session?.user) return;
     if (values.input.length === 0) return;
-
-    //TODO: check if user is pro and limit them creating new chat
-    const messages = (await getDocs(limitedMessagesRef(chatId))).docs.map(
-      (doc) => doc.data()
-    ).length;
-
-    const isPro =
-      subscription?.role === "pro" && subscription?.status === "active";
-
-    if (!isPro && messages >= 20) {
-      toast({
-        title: "Free Plan Limit Exceeded",
-        description:
-          "You've exceeded the FREE plan limit of 20 messages per chat.UPGRADE to PRO for UNLIMITED Chat Messages!",
-        variant: "destructive",
-        action: (
-          <ToastAction
-            altText="UPGRADE"
-            onClick={() => router.push("/register")}
-          >
-            UPGRADE to PRO
-          </ToastAction>
-        ),
-      });
-      return;
-    }
 
     const userToStore: IUser = {
       id: session.user.id!,

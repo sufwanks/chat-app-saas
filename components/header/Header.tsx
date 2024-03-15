@@ -6,8 +6,6 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { MessagesSquareIcon } from "lucide-react";
 import CreateChatButton from "./CreateChatButton";
-import UpgradeBanner from "./UpgradeBanner";
-import LanguageSelect from "./LanguageSelect";
 
 async function Header() {
   const session = await getServerSession(authOptions);
@@ -17,19 +15,14 @@ async function Header() {
         {/* Logo */}
         <Logo />
         <div className="flex-1 flex items-center justify-end space-x-4">
-          {/* Language Select */}
-          <LanguageSelect />
-
           {/* Session &&(... ) */}
-          {session ? (
+          {session && (
             <>
               <Link href={"/chat"} prefetch={false}>
                 <MessagesSquareIcon className="text-black dark:text-white" />
               </Link>
               <CreateChatButton />
             </>
-          ) : (
-            <Link href="/pricing">Pricing</Link>
           )}
 
           {/* DarkMode Toggle */}
@@ -39,8 +32,6 @@ async function Header() {
           <UserButton session={session} />
         </div>
       </nav>
-      {/* Upgrade Banner */}
-      <UpgradeBanner />
     </header>
   );
 }

@@ -5,23 +5,18 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { useSubscriptionStore } from "@/store/store";
 import { useToast } from "../ui/use-toast";
 import LoadingSpinner from "../loaders/LoadingSpinner";
 import { v4 as uuidv4 } from "uuid";
-import { getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
-import {
-  addChatRef,
-  chatMembersCollectionGroupRef,
-} from "@/lib/convertors/ChatMembers";
+import { serverTimestamp, setDoc } from "firebase/firestore";
+import { addChatRef } from "@/lib/convertors/ChatMembers";
 import { ICreateChatButtonProps } from "@/types";
-import { ToastAction } from "@radix-ui/react-toast";
+
 function CreateChatButton({ isLarge }: ICreateChatButtonProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const subscription = useSubscriptionStore((state) => state.subscription);
   //create a new chat
   const createNewChat = async () => {
     if (!session?.user.id) return;
@@ -34,32 +29,6 @@ function CreateChatButton({ isLarge }: ICreateChatButtonProps) {
     });
 
     const chatId = uuidv4();
-
-    const chats = (
-      await getDocs(chatMembersCollectionGroupRef(session.user.id))
-    ).docs.map((doc) => doc.data());
-
-    const isPro =
-      subscription?.role === "pro" && subscription.status === "active";
-
-    if (!isPro && chats.length >= 3) {
-      toast({
-        title: "Free plan limit exceeded",
-        description:
-          "You've exceeded the limit of chats for the FREE plan.Please Upgrade to PRO to continue adding users to chat!!!",
-        variant: "destructive",
-        action: (
-          <ToastAction
-            altText="UPGRADE"
-            onClick={() => router.push("/register")}
-          >
-            UPGRADE TO PRO!!!
-          </ToastAction>
-        ),
-      });
-      setLoading(false);
-      return;
-    }
 
     await setDoc(addChatRef(chatId, session.user.id), {
       userId: session.user.id!,

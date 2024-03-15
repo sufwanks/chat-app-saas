@@ -41,7 +41,7 @@ function ShareLink({ isOpen, chatId, setIsOpen }: IShareLinkProps) {
   }
   return (
     <Dialog
-      onOpenChange={(open) => setIsOpen(open)}
+      onOpenChange={(open: any) => setIsOpen(open)}
       open={isOpen}
       defaultOpen={isOpen}
     >

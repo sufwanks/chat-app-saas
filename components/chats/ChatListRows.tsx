@@ -10,7 +10,7 @@ import { IChatMember, IChatMembersList } from "@/types";
 function ChatListRows({ initialChats }: IChatMembersList) {
   const { data: session } = useSession();
 
-  const [members, loading, error] = useCollectionData<IChatMember>(
+  const [members] = useCollectionData<IChatMember>(
     session && chatMembersCollectionGroupRef(session?.user.id!),
     {
       initialValue: initialChats,

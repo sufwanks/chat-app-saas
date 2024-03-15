@@ -1,11 +1,9 @@
 "use client";
-import { messageRef, sortedMessagesRef } from "@/lib/convertors/Message";
-import { useLangugageStore } from "@/store/store";
+import { sortedMessagesRef } from "@/lib/convertors/Message";
 import { IChatMessagesProps, IMessage } from "@/types";
 import { MessageCircleIcon } from "lucide-react";
 import { createRef, useEffect } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import LoadingSpinner from "../loaders/LoadingSpinner";
 import UserAvatar from "../header/UserAvatar";
 
 function ChatMessages({
@@ -13,10 +11,9 @@ function ChatMessages({
   initialMessages,
   session,
 }: IChatMessagesProps) {
-  const language = useLangugageStore((state) => state.language);
   const messagesEndRef = createRef<HTMLDivElement>();
 
-  const [messages, loading, error] = useCollectionData<IMessage>(
+  const [messages, loading] = useCollectionData<IMessage>(
     sortedMessagesRef(chatId),
     {
       initialValue: initialMessages,
@@ -33,12 +30,9 @@ function ChatMessages({
           <MessageCircleIcon className="h-10 w-10" />
           <h2>
             <span className="font-bold">Invite a Friend</span> &{" "}
-            <span className="font-bold">
-              Send your first message in ANY language
-            </span>{" "}
-            below to get started
+            <span className="font-bold">Send your first message</span> below to
+            get started
           </h2>
-          <p>The AI will auto detect & translate it all for you</p>
         </div>
       )}
 
@@ -53,16 +47,8 @@ function ChatMessages({
                   : "bg-gray-100 dark:text-gray-100 dark:bg-slate-700 rounded-bl-none"
               }`}
             >
-              {/* <p
-                className={`text-xs italic font-extralight line-clamp-1 ${
-                  isSender ? "text-right" : "text-left"
-                }`}
-              >
-                {message.user.name.split(" ")[0]}
-              </p> */}
               <div className="flex space-x-1">
-                <p>{message?.translated?.[language] || message.input}</p>
-                {!message.translated && <LoadingSpinner />}
+                <p>{message.input}</p>
               </div>
             </div>
             <UserAvatar

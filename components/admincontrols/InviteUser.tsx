@@ -21,15 +21,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { getDocs, serverTimestamp, setDoc } from "firebase/firestore";
-import { addChatRef, chatMembersRef } from "@/lib/convertors/ChatMembers";
+import { addChatRef } from "@/lib/convertors/ChatMembers";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { getUserByEmailRef } from "@/lib/convertors/User";
 import useAdminId from "@/hooks/useAdminId";
 import { PlusCircleIcon } from "lucide-react";
-import { useSubscriptionStore } from "@/store/store";
-import { ToastAction } from "@/components/ui/toast";
-import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
 import ShareLink from "./ShareLink";
 
@@ -41,8 +38,6 @@ function InviteUser({ chatId }: IAdminControlsInviteUserProps) {
   const { data: session } = useSession();
   const { toast } = useToast();
   const adminID = useAdminId({ chatId });
-  const subscription = useSubscriptionStore((state) => state.subscription);
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [openInviteLink, setOpenInviteLink] = useState(false);
 
@@ -59,36 +54,6 @@ function InviteUser({ chatId }: IAdminControlsInviteUserProps) {
       title: "Sending Invite",
       description: "Please wait!!! While we are sending the invite...",
     });
-
-    // We need to get the users current chats to check if they are about to exceed the PRO plan
-
-    const noOfUsersInChat = (await getDocs(chatMembersRef(chatId))).docs.map(
-      (doc) => doc.data()
-    );
-
-    // check if the user is about to exceed the PRO plan which is 3 Chats
-
-    const isPro =
-      subscription?.role === "pro" && subscription?.status === "active";
-
-    if (!isPro && noOfUsersInChat.length >= 2) {
-      toast({
-        title: "Free Plan Limit Exceeded",
-        description:
-          "You've exceeded the limit of users in a single chat for the FREE plan. Please upgrade to PRO to continue adding users to chats!!!",
-        variant: "destructive",
-
-        action: (
-          <ToastAction
-            altText="Upgrade"
-            onClick={() => router.push("/register")}
-          >
-            UPGRADE TO PRO!!!
-          </ToastAction>
-        ),
-      });
-      return;
-    }
 
     const getIfUserExists = await getDocs(getUserByEmailRef(values.email));
 
